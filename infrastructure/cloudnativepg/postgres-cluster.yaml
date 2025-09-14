@@ -1,0 +1,58 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-cluster
+  namespace: default
+spec:
+  instances: 1
+  postgresql:
+    parameters:
+      max_connections: "100"
+  bootstrap:
+    initdb:
+      database: phoenix_app
+      owner: phoenix_user
+      secret:
+        name: postgres-credentials
+  storage:
+    size: 1Gi
+    storageClass: local-path
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-credentials
+  namespace: default
+type: Opaque
+stringData:
+  username: phoenix_user
+  password: phoenix_password123
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-cluster
+  namespace: default
+spec:
+  instances: 1
+  primaryUpdateStrategy: unsupervised
+  postgresql:
+    parameters:
+      max_connections: "100"
+  bootstrap:
+    initdb:
+      database: phoenix_app
+      owner: phoenix_user
+      secret:
+        name: postgres-credentials
+  storage:
+    size: 1Gi
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-credentials
+  namespace: default
+type: Opaque
+stringData:
+  username: phoenix_user
+  password: phoenix_password123

@@ -1,0 +1,16 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: phoenix-app
+  namespace: default
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: ./apps/phoenix-app/helm-chart
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+  values:
+    replicaCount: 1

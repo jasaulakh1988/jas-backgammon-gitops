@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: phoenix-app
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}
+          name: http
+        env:
+        - name: PORT
+          value: "{{ .Values.env.PORT }}"
+        - name: MIX_ENV
+          value: "{{ .Values.env.MIX_ENV }}"
+        - name: PHX_HOST
+          value: "{{ .Values.env.PHX_HOST }}"
+        - name: PHX_SERVER
+          value: "{{ .Values.env.PHX_SERVER }}"
+        - name: SECRET_KEY_BASE
+          value: "{{ .Values.secret.secretKeyBase }}"
+        - name: DATABASE_URL
+          value: "ecto://{{ .Values.database.username }}:{{ .Values.database.password }}@{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.name }}"
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
