@@ -13,10 +13,27 @@ spec:
       labels:
         app: {{ .Release.Name }}
     spec:
+      initContainers:
+      - name: setup-directories
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            mkdir -p /app/priv/static
+            mkdir -p /app/bin
+            echo "Directories created"
+        volumeMounts:
+        - name: app-storage
+          mountPath: /app
       containers:
       - name: phoenix-app
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            mkdir -p /app/priv/static
+            /app/bin/hello start
         ports:
         - containerPort: {{ .Values.service.targetPort }}
           name: http
@@ -32,6 +49,12 @@ spec:
         - name: SECRET_KEY_BASE
           value: "{{ .Values.secret.secretKeyBase }}"
         - name: DATABASE_URL
-          value: "ecto://{{ .Values.database.username }}:{{ .Values.database.password }}@{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.name }}"
+          value: "postgresql://{{ .Values.database.username }}:{{ .Values.database.password }}@{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.name }}"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
+        volumeMounts:
+        - name: app-storage
+          mountPath: /app/priv/static
+      volumes:
+      - name: app-storage
+        emptyDir: {}
