@@ -13,48 +13,35 @@ spec:
       labels:
         app: {{ .Release.Name }}
     spec:
-      initContainers:
-      - name: setup-directories
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        command: ["/bin/sh", "-c"]
-        args:
-          - |
-            mkdir -p /app/priv/static
-            mkdir -p /app/bin
-            echo "Directories created"
-        volumeMounts:
-        - name: app-storage
-          mountPath: /app
       containers:
       - name: phoenix-app
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        command: ["/bin/sh", "-c"]
-        args:
-          - |
-            mkdir -p /app/priv/static
-            /app/bin/hello start
         ports:
         - containerPort: {{ .Values.service.targetPort }}
           name: http
         env:
+        - name: URL_HOST
+          value: "localhost"
+        - name: URL_SCHEME
+          value: "http"
+        - name: URL_PORT
+          value: "8000"
         - name: PORT
-          value: "{{ .Values.env.PORT }}"
-        - name: MIX_ENV
-          value: "{{ .Values.env.MIX_ENV }}"
-        - name: PHX_HOST
-          value: "{{ .Values.env.PHX_HOST }}"
-        - name: PHX_SERVER
-          value: "{{ .Values.env.PHX_SERVER }}"
+          value: "8000"
         - name: SECRET_KEY_BASE
-          value: "{{ .Values.secret.secretKeyBase }}"
-        - name: DATABASE_URL
-          value: "postgresql://{{ .Values.database.username }}:{{ .Values.database.password }}@{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.name }}"
+          value: "really-long-secret-key-base-at-least-64-characters-for-production-phoenix-app-use"
+        - name: POSTGRES_USER
+          value: "phoenix_user"
+        - name: POSTGRES_PASSWORD
+          value: "phoenix_password123"
+        - name: POSTGRES_HOST
+          value: "postgres-cluster"
+        - name: POSTGRES_DB
+          value: "phoenix_app"
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_POOL
+          value: "10"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
-        volumeMounts:
-        - name: app-storage
-          mountPath: /app/priv/static
-      volumes:
-      - name: app-storage
-        emptyDir: {}

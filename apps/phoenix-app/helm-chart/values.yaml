@@ -1,4 +1,4 @@
-replicaCount: 2
+replicaCount: 1
 
 image:
   repository: jasaulakh/phoenix-app
@@ -18,19 +18,3 @@ resources:
   requests:
     cpu: 250m
     memory: 256Mi
-
-env:
-  PORT: "8000"
-  MIX_ENV: "prod"
-  PHX_HOST: "localhost"
-  PHX_SERVER: "true"
-  
-database:
-  host: postgres-cluster.default.svc.cluster.local
-  port: 5432
-  name: phoenix_app
-  username: phoenix_user
-  password: phoenix_password123
-
-secret:
-  secretKeyBase: "really-long-secret-key-base-at-least-64-characters-for-production-phoenix-app-use"
