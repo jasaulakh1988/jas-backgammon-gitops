@@ -17,6 +17,12 @@ spec:
       - name: phoenix-app
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            mkdir -p /app/priv/static
+            cp -r /public/. /app/priv/static/ || true
+            exec /app/bin/hello start
         ports:
         - containerPort: {{ .Values.service.targetPort }}
           name: http
