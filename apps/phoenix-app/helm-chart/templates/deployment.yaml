@@ -42,12 +42,14 @@ spec:
         - name: POSTGRES_PASSWORD
           value: "phoenix_password123"
         - name: POSTGRES_HOST
-          value: "postgres-cluster"
+          value: "postgres-cluster-rw"
         - name: POSTGRES_DB
           value: "phoenix_app"
         - name: POSTGRES_PORT
           value: "5432"
         - name: POSTGRES_POOL
           value: "10"
+        - name: SWOOSH_API_CLIENT
+          value: "Swoosh.ApiClient.Hackney"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
