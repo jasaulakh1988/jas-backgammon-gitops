@@ -22,6 +22,7 @@ spec:
           - |
             mkdir -p /app/priv/static
             cp -r /public/. /app/priv/static/ || true
+            export MIX_ENV=dev
             exec /app/bin/hello start
         ports:
         - containerPort: {{ .Values.service.targetPort }}
@@ -49,7 +50,5 @@ spec:
           value: "5432"
         - name: POSTGRES_POOL
           value: "10"
-        - name: SWOOSH_API_CLIENT
-          value: "Swoosh.ApiClient.Hackney"
         resources:
           {{- toYaml .Values.resources | nindent 10 }}
