@@ -6,9 +6,17 @@ metadata:
 spec:
   instances: 1
   primaryUpdateStrategy: unsupervised
+  
+  # Add monitoring section
+  monitoring:
+    enabled: true
+    
   postgresql:
     parameters:
       max_connections: "100"
+      shared_preload_libraries:
+        - pg_stat_statements
+        
   bootstrap:
     initdb:
       database: phoenix_app
