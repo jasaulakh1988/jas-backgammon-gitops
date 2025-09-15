@@ -53,6 +53,7 @@ defmodule Hello.MixProject do
       {:phoenix_live_reload, "1.6.0", only: :dev},
       {:phoenix_live_view, "1.1.8"},
       {:postgrex, "0.21.1"},
+      {:req, "~> 0.5.0"},
       {:swoosh, "1.19.5"},
       {:telemetry_metrics, "1.1.0"},
       {:telemetry_poller, "1.3.0"}
