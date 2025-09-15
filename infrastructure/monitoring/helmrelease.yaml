@@ -25,6 +25,8 @@ spec:
         nodePort: 30300
     prometheus:
       prometheusSpec:
+        podMonitorSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
         retention: 7d
         storageSpec:
           volumeClaimTemplate:

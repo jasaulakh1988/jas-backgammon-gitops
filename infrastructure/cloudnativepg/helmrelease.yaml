@@ -17,3 +17,9 @@ spec:
   interval: 10m
   install:
     createNamespace: true
+  values:
+    monitoring:
+      enabled: true
+      podMonitorEnabled: true
+      grafanaDashboard:
+        create: true
